@@ -14,7 +14,7 @@ const SYSTEM = `Eres el asistente del informe "Revisión de consumo Maicao" (FEM
 
 Reglas:
 - Usa SOLO datos que obtengas con las herramientas. Si no hay dato, dilo. Nunca inventes cifras.
-- Compara 2026 contra los mismos meses de 2025 salvo que pidan otra cosa. Meses disponibles: enero a octubre (1 a 10). Noviembre solo existe en la proyección.
+- Compara 2026 contra los mismos meses de 2025 salvo que pidan otra cosa. Los indicadores mensuales cubren enero a octubre (1 a 10). Para noviembre 2026 (real hasta el último día cargado) o días puntuales usa venta_detalle_diaria, que compara con el día homólogo 2025; para el cierre esperado de noviembre usa proyeccion_noviembre.
 - Las transacciones no se suman entre mundos ni macrocategorías del mismo mes: usa lo que devuelve la herramienta para cada nivel.
 - Precio promedio = venta/unidades; ticket = venta/transacciones; margen = contribución/venta; unidades por ticket = unidades/transacciones; penetración MMPP = venta MMPP/venta total.
 - Market share F+P = venta Maicao / venta farmacias+perfumerías Nielsen; share total = Maicao / (F+P + supermercados).
@@ -43,6 +43,9 @@ const TOOLS = [
     input_schema: S({ mundo, macro }) },
   { name: "efecto_farma", description: "Efecto de la unidad Farma en la cadena para los meses elegidos: variación de farma, su peso y cómo crece la cadena con y sin farma.",
     input_schema: S({ meses }) },
+  { name: "venta_detalle_diaria", description: "Venta diaria detallada de Consumo con mayorista desde el archivo diario por mundo, macrocategoría y categoría N1 (fines de sept a inicios de dic 2025 y fines de sept 2026 al último día cargado de noviembre 2026). Compara cada día con su homólogo 2025 (364 días antes) y entrega venta, unidades, precio, margen y, a nivel N1, transacciones y ticket. Úsala para cualquier pregunta de noviembre 2026, días puntuales, margen diario o por canal (POS, WEB, MAY, RETAIL).",
+    input_schema: S({ desde: { type: "string", description: "YYYY-MM-DD (2026)" }, hasta: { type: "string", description: "YYYY-MM-DD (2026)" }, mundo, macro, n1: { type: "string", description: "Categoría N1 en mayúsculas" },
+      segmento: { type: "string", enum: ["TOTAL", "RETAIL", "POS", "WEB", "MAY"] }, agrupar: { type: "string", enum: ["total", "dia", "mundo", "macro", "n1", "segmento"] } }, ["desde", "hasta"]) },
   { name: "venta_diaria", description: "Venta diaria por unidad comercial entre dos fechas (YYYY-MM-DD, desde ene-2025 hasta el último día cargado), con el día homólogo del año anterior (364 días antes).",
     input_schema: S({ unidad, desde: { type: "string" }, hasta: { type: "string" } }, ["desde", "hasta"]) }
 ]
