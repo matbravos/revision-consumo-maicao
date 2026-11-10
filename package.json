@@ -1,0 +1,9 @@
+{
+  "name": "revision-consumo-maicao",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0",
+    "@netlify/functions": "^6.1.1"
+  }
+}
