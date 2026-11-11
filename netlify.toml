@@ -1,6 +1,4 @@
+# Netlify desactivado: el informe se publica solo en GitHub Pages.
 [build]
   publish = "."
-  command = "echo sin build"
-
-[functions]
-  directory = "netlify/functions"
+  ignore = "exit 0"
